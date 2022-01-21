@@ -1,5 +1,4 @@
 /*
-    
     Description:
     Fish timer! User can give length of fish competition and stops for changing "bonus" fish. 
     It then displays how much is left of competition and bonus fish. Bonus fish is randomly changed.
@@ -31,14 +30,29 @@ playButton.addEventListener("click", startFishing);
 pauseButton.addEventListener("click", pauseFishing);
 resetButton.addEventListener("click", resetFishing);
 
+timeSlider.oninput = function () {
+    timer = setupClock(this.value);
+    stringTime = timeInString(timer);
+    displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
+    runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
+}
+
+stopSlider.oninput = function () {
+    stopsAmount = this.value;
+    displayStops.innerHTML = this.value;
+}
+
+// Variables
 const bells = new Audio(`mixkit-school-calling-bell-580.wav`);
 const fishes = ["Hauki", "Ahven", "Taimen", "Kuha"];
 let bonusFish = fishes.sample();
 let stopsAmount, toggleRaceOn, timer, paused, storeTimer, stringTime
 let stopEvents = [];
 
+// Initial state for program.
 startConditions();
 
+// Create random times between given minutes and stops amount. 
 function randomTimes(minutes, stops) {
     let partsSize = Math.round(minutes / stops);
     let randomNumber;
@@ -55,6 +69,7 @@ function randomTimes(minutes, stops) {
     }
 }
 
+// Gives start values
 function startConditions() {
     stopEvents = [];
     paused = true;
@@ -70,18 +85,7 @@ function startConditions() {
     runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
 }
 
-timeSlider.oninput = function () {
-    timer = setupClock(this.value);
-    stringTime = timeInString(timer);
-    displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
-    runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
-}
-
-stopSlider.oninput = function () {
-    stopsAmount = this.value;
-    displayStops.innerHTML = this.value;
-}
-
+// Renders elements depending on if timer is on or off.
 function renderElements() {
     stringTime = timeInString(timer);
     if (toggleRaceOn) {
@@ -100,6 +104,7 @@ function renderElements() {
     }
 }
 
+// Takes integer values and convert time to string format for display purposis.
 function timeInString(timer) {
     let stringMinutes, stringSeconds
     if (timer.minutes < 10) {
@@ -122,7 +127,7 @@ function timeInString(timer) {
     return stringTime;
 }
 
-
+// Play button functionality. Hides elements that aren't needed when timer is on and starts timer. Prevents starting again if timer is allready running.
 function startFishing() {
     if (stopEvents.length == 0) {
         randomTimes(timeSlider.value, stopSlider.value);
@@ -141,6 +146,7 @@ function startFishing() {
     runClock(timer)
 }
 
+// Pause button functionality. Pauses timer and displays status text accordingly. Toggling will restart timer.
 function pauseFishing() {
     bells.pause();
     if (!toggleRaceOn && !paused) {
@@ -156,6 +162,7 @@ function pauseFishing() {
     }
 }
 
+// Reset button functionality. Reset values and displays sliders again to make new timer.
 function resetFishing() {
     clearTimeout(storeTimer);
     paused = true;
@@ -165,7 +172,7 @@ function resetFishing() {
     statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
 }
 
-
+// Takes minutes in and converts it to hour, minutes and seconds
 function setupClock(inputMinutes) {
     let hours = Math.floor(inputMinutes / 60);
     let minutes = inputMinutes % 60;
@@ -180,6 +187,7 @@ function setupClock(inputMinutes) {
     return timer
 }
 
+// Check if timed event needs to be played. Change bonusfish and play sound.
 function checkEventTimer(stops, timer) {
     for(let i=0; i < stops.length; i++) {
         if (stops[i].hours == timer.hours && stops[i].minutes == timer.minutes && stops[i].seconds == timer.seconds) {
@@ -192,6 +200,7 @@ function checkEventTimer(stops, timer) {
     }
 }
 
+// Run clock down until time is out. 
 function runClock(timer) {
     if (!paused) {
         storeTimer = setTimeout(function () {
