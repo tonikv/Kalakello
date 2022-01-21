@@ -30,12 +30,11 @@ body {
     font-size: xx-large;
 }
 
-
 .time-left {
-    padding: 0 0 15x 0;
     display: none;
     text-align: center;
     font-size: 80px;
+    margin-bottom: 33px;
 }
 
 .buttons-container {
