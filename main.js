@@ -1,7 +1,8 @@
 /*
     
     Description:
-    Fish timer! User can give time and stops for changing "bonus" fish for fishing competitions
+    Fish timer! User can give length of fish competition and stops for changing "bonus" fish. 
+    It then displays how much is left of competition and bonus fish. Bonus fish is randomly changed.
 
     Functionality:
     Two sliders for timer and stops amount
@@ -18,12 +19,32 @@ const playButton = document.querySelector("#play");
 const pauseButton = document.querySelector("#pause");
 const resetButton = document.querySelector("#reset");
 const runningClock = document.querySelector("#time-left");
-const statusEl = document.querySelector("#status");
+const statusText = document.querySelector("#status");
 
 let timerInMinutes, stopsAmount, toggleRaceOn, timer, paused, storeTimer, stringTime
 const fishes = ["Hauki", "Ahven", "Kuha", "Taimen"];
+const stopEvents = [];
 
 startConditions();
+
+function randomTimes(minutes, stops) {
+    let partsSize = Math.round(minutes / stops);
+    let randomNumber;
+    let min = partsSize / 2;
+    let totalTime = 0;
+    for(let i=0; i < stops; i++) {
+        randomNumber = Math.floor(Math.random() * min) + min;
+        totalTime += Math.round(randomNumber);
+        stopEvents.push(totalTime);
+    }
+
+    for(let i=0; i < stopEvents.length; i++) {
+        stopEvents[i] = setupClock(stopEvents[i]);
+    }
+    console.table(stopEvents);
+}
+
+randomTimes(180, 6);
 
 function startConditions() {
     paused = true;
@@ -33,7 +54,7 @@ function startConditions() {
     timer = setupClock(timeSlider.value);
     stringTime = timeInString(timer);
     stopsAmount = stopSlider.value;
-    statusEl.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
+    statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
     displayStops.innerHTML = stopsAmount;
     displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
     runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
@@ -65,18 +86,18 @@ function renderElements() {
         timeSlider.style.display = "none";
         stopSlider.style.display = "none";
         displayTime.style.display = "none";
-        displayStops.style.display = "none"; 
+        displayStops.style.display = "none";
     } else {
         runningClock.style.display = "none";
         timeSlider.style.display = "block";
         stopSlider.style.display = "block";
         displayTime.style.display = "block";
-        displayStops.style.display = "block"; 
-        }
+        displayStops.style.display = "block";
+    }
 }
 
 function timeInString(timer) {
-    let stringMinutes, stringSeconds 
+    let stringMinutes, stringSeconds
     if (timer.minutes < 10) {
         stringMinutes = `0${timer.minutes}`;
     } else {
@@ -99,7 +120,7 @@ function timeInString(timer) {
 
 
 function startFishing() {
-    statusEl.innerHTML = "Kisa käynnissä";
+    statusText.innerHTML = "Kisa käynnissä";
     runningClock.style.display = "block";
     timeSlider.style.display = "none";
     stopSlider.style.display = "none";
@@ -111,15 +132,15 @@ function startFishing() {
 }
 
 function pauseFishing() {
-    if(!toggleRaceOn) {
+    if (!toggleRaceOn) {
         return;
     }
 
-    statusEl.innerHTML = "Kisa pysäytetty";
+    statusText.innerHTML = "Kisa pysäytetty";
 
     clearTimeout(storeTimer);
     paused = !paused
-    if(!paused) {
+    if (!paused) {
         startFishing();
     }
 }
@@ -130,7 +151,7 @@ function resetFishing() {
     toggleRaceOn = false;
     startConditions();
     renderElements();
-    statusEl.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
+    statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
 }
 
 
