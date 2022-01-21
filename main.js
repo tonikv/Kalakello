@@ -10,10 +10,15 @@
     Stop event will play sound and display new bonus fish
 */
 
+Array.prototype.sample = function() {
+    return this[Math.floor(Math.random()*this.length)];
+}
+
 // Get reference to elements
 const timeSlider = document.querySelector("#time");
 const stopSlider = document.querySelector("#stops");
 const displayTime = document.querySelector("#clock-display");
+
 const displayStops = document.querySelector("#stops-display");
 const playButton = document.querySelector("#play");
 const pauseButton = document.querySelector("#pause");
@@ -21,9 +26,16 @@ const resetButton = document.querySelector("#reset");
 const runningClock = document.querySelector("#time-left");
 const statusText = document.querySelector("#status");
 
-let timerInMinutes, stopsAmount, toggleRaceOn, timer, paused, storeTimer, stringTime
-const fishes = ["Hauki", "Ahven", "Kuha", "Taimen"];
-const stopEvents = [];
+// Event listeners
+playButton.addEventListener("click", startFishing);
+pauseButton.addEventListener("click", pauseFishing);
+resetButton.addEventListener("click", resetFishing);
+
+const bells = new Audio(`mixkit-school-calling-bell-580.wav`);
+const fishes = ["Hauki", "Ahven", "Taimen", "Kuha"];
+let bonusFish = fishes.sample();
+let stopsAmount, toggleRaceOn, timer, paused, storeTimer, stringTime
+let stopEvents = [];
 
 startConditions();
 
@@ -41,12 +53,10 @@ function randomTimes(minutes, stops) {
     for(let i=0; i < stopEvents.length; i++) {
         stopEvents[i] = setupClock(stopEvents[i]);
     }
-    console.table(stopEvents);
 }
 
-randomTimes(180, 6);
-
 function startConditions() {
+    stopEvents = [];
     paused = true;
     toggleRaceOn = false;
     timeSlider.value = 120;
@@ -61,8 +71,7 @@ function startConditions() {
 }
 
 timeSlider.oninput = function () {
-    timerInMinutes = this.value;
-    timer = setupClock(timeSlider.value);
+    timer = setupClock(this.value);
     stringTime = timeInString(timer);
     displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
     runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
@@ -72,11 +81,6 @@ stopSlider.oninput = function () {
     stopsAmount = this.value;
     displayStops.innerHTML = this.value;
 }
-
-playButton.addEventListener("click", startFishing);
-pauseButton.addEventListener("click", pauseFishing);
-resetButton.addEventListener("click", resetFishing);
-
 
 function renderElements() {
     stringTime = timeInString(timer);
@@ -120,7 +124,13 @@ function timeInString(timer) {
 
 
 function startFishing() {
-    statusText.innerHTML = "Kisa käynnissä";
+    if (stopEvents.length == 0) {
+        randomTimes(timeSlider.value, stopSlider.value);
+    }
+    if(toggleRaceOn) {
+        return;
+    }
+    statusText.innerHTML = `Bonuskala ${bonusFish}`;
     runningClock.style.display = "block";
     timeSlider.style.display = "none";
     stopSlider.style.display = "none";
@@ -132,10 +142,11 @@ function startFishing() {
 }
 
 function pauseFishing() {
-    if (!toggleRaceOn) {
+    bells.pause();
+    if (!toggleRaceOn && !paused) {
         return;
     }
-
+    toggleRaceOn = false;
     statusText.innerHTML = "Kisa pysäytetty";
 
     clearTimeout(storeTimer);
@@ -169,6 +180,18 @@ function setupClock(inputMinutes) {
     return timer
 }
 
+function checkEventTimer(stops, timer) {
+    for(let i=0; i < stops.length; i++) {
+        if (stops[i].hours == timer.hours && stops[i].minutes == timer.minutes && stops[i].seconds == timer.seconds) {
+            
+            bonusFish = fishes.sample();
+            statusText.innerHTML = `Bonuskala ${bonusFish}`;
+            bells.play();
+
+        }
+    }
+}
+
 function runClock(timer) {
     if (!paused) {
         storeTimer = setTimeout(function () {
@@ -187,6 +210,8 @@ function runClock(timer) {
             if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 1) {
                 console.log("TIME OUT!");
             }
+
+            checkEventTimer(stopEvents, timer);
             renderElements();
             runClock(timer);
         }, 1000)
