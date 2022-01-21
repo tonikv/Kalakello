@@ -18,36 +18,38 @@
         <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <h1 class="header">KALAKELLO</h1>
+        <h1 class="header">KALAKISAKELLO</h1>
         <div class="flex-container">
             <!--Input fields for adjusting time and stops-->
             <div class="timer-slider-container">
-                <input type="range" min="30" max="480" value="120" step="30" class="slider" id="time">
+                <input type="range" min="30" max="480" value="150" step="30" class="slider" id="time">
             </div>
             <div class="adjust-stops-container">
                 <input type="range" min="1" max="10" value="4" class="slider" id="stops">
             </div>
 
+            <div id="time-left" class="time-left">Hyvää kalaonnea!</div>
+
             <!--Display timer and stops-->
-            <div id="clock-display" class="clock"> 
-                1:30 
+            <div id="clock-display" class="clock">  
             </div>
             <div id="stops-display" class="stops"> 
-                4
             </div>
 
             <!--Start, pause and reset buttons-->
             <div class="buttons-container">
-                <button class="button">
+                <button id="play" class="button">
                     <i class="bi-play" style="font-size: 2rem; color: cornflowerblue;"></i>
                 </button>
-                <button class="button">
+                <button id="pause" class="button">
                     <i class="bi-pause" style="font-size: 2rem; color: cornflowerblue;"></i>
                 </button>
-                <button class="button">
+                <button id="reset" class="button">
                     <i class="bi-arrow-repeat" style="font-size: 2rem; color: cornflowerblue;"></i>
                 </button>
             </div>
+
+            <div id="status" class="statusbar">Kisa käynnissä</div>
 
         </div>
         <script src="main.js" async defer></script>
