@@ -33,8 +33,22 @@ body {
     font-size: xx-large;
 }
 
+.time-left {
+    padding: 20px;
+    display: none;
+    text-align: center;
+    font-size: 60px;
+}
+
 .buttons-container {
+    position: fixed;
+    top: 14%;
     flex-direction: row;
+}
+
+.statusbar {
+    position: fixed;
+    top: 18%;
 }
 
 .slider {
