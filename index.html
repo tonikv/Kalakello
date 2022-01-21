@@ -5,53 +5,59 @@
 <!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
 
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Kalakello</title>
-        <meta name="description" content="Fish timer - give random fishes during user given time period">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-        <link rel="stylesheet" href="index.css">
-    </head>
-    <body>
-        <!--[if lt IE 7]>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Kalakello</title>
+    <meta name="description" content="Fish timer - give random fishes during user given time period">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500&family=Roboto:ital,wght@0,300;0,500;0,700;1,300&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <h1 class="header">KALAKISAKELLO</h1>
-        <div class="flex-container">
-            <!--Input fields for adjusting time and stops-->
-            <div class="timer-slider-container">
-                <input type="range" min="30" max="480" value="150" step="30" class="slider" id="time">
-            </div>
-            <div class="adjust-stops-container">
-                <input type="range" min="1" max="10" value="4" class="slider" id="stops">
-            </div>
-
-            <div id="time-left" class="time-left">Hyvää kalaonnea!</div>
-
-            <!--Display timer and stops-->
-            <div id="clock-display" class="clock">  
-            </div>
-            <div id="stops-display" class="stops"> 
-            </div>
-
-            <!--Start, pause and reset buttons-->
-            <div class="buttons-container">
-                <button id="play" class="button">
-                    <i class="bi-play" style="font-size: 2rem; color: cornflowerblue;"></i>
-                </button>
-                <button id="pause" class="button">
-                    <i class="bi-pause" style="font-size: 2rem; color: cornflowerblue;"></i>
-                </button>
-                <button id="reset" class="button">
-                    <i class="bi-arrow-repeat" style="font-size: 2rem; color: cornflowerblue;"></i>
-                </button>
-            </div>
-
-            <div id="status" class="statusbar">Kisa käynnissä</div>
-
+    <h1 class="header">KALAKELLO<span><i class="bi bi-badge-tm small"></i></span></h1>
+    <div class="flex-container">
+        <!--Input fields for adjusting time and stops-->
+        <div class="timer-slider-container">
+            <input type="range" min="30" max="480" value="150" step="30" class="slider" id="time">
         </div>
-        <script src="main.js" async defer></script>
-    </body>
+        <div class="adjust-stops-container">
+            <input type="range" min="1" max="20" value="4" class="slider" id="stops">
+        </div>
+
+        <div id="time-left" class="time-left">Hyvää kalaonnea!</div>
+
+        <!--Display timer and stops-->
+            <div id="clock-display" class="big-font"></div>
+            <div id="stops-display" class="big-font"></div>
+
+        <!--Start, pause and reset buttons-->
+        <div class="buttons-container">
+            <button id="play" class="button">
+                <i class="bi-play" style="font-size: 2rem; color: cornflowerblue;"></i>
+            </button>
+            <button id="pause" class="button">
+                <i class="bi-pause" style="font-size: 2rem; color: cornflowerblue;"></i>
+            </button>
+            <button id="reset" class="button">
+                <i class="bi-arrow-repeat" style="font-size: 2rem; color: cornflowerblue;"></i>
+            </button>
+        </div>
+
+        <div id="status" class="statusbar"></div>
+
+    </div>
+    <script src="main.js" async defer></script>
+</body>
+
 </html>
