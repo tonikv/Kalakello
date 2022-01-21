@@ -194,6 +194,7 @@ function checkEventTimer(stops, timer) {
             
             bonusFish = fishes.sample();
             statusText.innerHTML = `Bonuskala ${bonusFish}`;
+            window.navigator.vibrate(500);
             bells.play();
 
         }
