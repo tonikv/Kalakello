@@ -6,3 +6,5 @@ Functionality:
 Two sliders for timer and stops amount
 Stops are randomly placed between given time interval
 Stop event will play sound and display new bonus fish
+
+Try it [here](https://tonikv.github.io/Kalakello/)
