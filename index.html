@@ -27,6 +27,7 @@
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
     <h1 class="header">KALAKELLO</h1>
+    <div id="status" class="statusbar"></div>
     <div class="flex-container">
         <!--Input fields for adjusting time and stops-->
         <div class="timer-slider-container">
@@ -53,9 +54,12 @@
             <button id="reset" class="button">
                 <i class="bi-arrow-repeat" style="font-size: 2rem; color: cornflowerblue;"></i>
             </button>
+            <button id="show" class="button">
+                <i class="bi bi-question-lg" style="font-size: 2rem; color: cornflowerblue;"></i>
+            </button>
         </div>
 
-        <div id="status" class="statusbar"></div>
+        <ul id="stops-list" class="stops-list"></ul>
 
     </div>
     <script src="main.js" async defer></script>
