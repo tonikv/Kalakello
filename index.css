@@ -7,6 +7,8 @@ body {
 
 .header {
     text-align: center;
+    padding: 0;
+    margin-top: 10px;
 }
 
 .flex-container {
@@ -42,8 +44,23 @@ body {
 }
 
 .statusbar {
-    padding-top: 15px;
-    font-size: medium;
+    padding-bottom: 5px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.stops-list {
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+
+.listItems {
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    display: block;
+    font-size: large;
+    text-decoration: double;
 }
 
 .slider {
