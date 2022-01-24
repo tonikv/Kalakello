@@ -17,11 +17,12 @@ Array.prototype.sample = function() {
 const timeSlider = document.querySelector("#time");
 const stopSlider = document.querySelector("#stops");
 const displayTime = document.querySelector("#clock-display");
-
+const stopList = document.querySelector("#stops-list");
 const displayStops = document.querySelector("#stops-display");
 const playButton = document.querySelector("#play");
 const pauseButton = document.querySelector("#pause");
 const resetButton = document.querySelector("#reset");
+const showButton = document.querySelector("#show");
 const runningClock = document.querySelector("#time-left");
 const statusText = document.querySelector("#status");
 
@@ -29,6 +30,7 @@ const statusText = document.querySelector("#status");
 playButton.addEventListener("click", startFishing);
 pauseButton.addEventListener("click", pauseFishing);
 resetButton.addEventListener("click", resetFishing);
+showButton.addEventListener("click", toggleShowList);
 
 timeSlider.oninput = function () {
     timer = setupClock(this.value);
@@ -69,6 +71,12 @@ function randomTimes(minutes, stops) {
     }
 }
 
+function clearElementsChilds(element) {
+    while(element.firstChild) {
+        element.removeChild(element.firstChild);
+    }
+}
+
 // Gives start values
 function startConditions() {
     stopEvents = [];
@@ -80,7 +88,7 @@ function startConditions() {
     stringTime = timeInString(timer);
     stopsAmount = stopSlider.value;
     statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
-    displayStops.innerHTML = stopsAmount;
+    displayStops.innerHTML = `${stopsAmount}`;
     displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
     runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
 }
@@ -93,10 +101,11 @@ function renderElements() {
         runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
         timeSlider.style.display = "none";
         stopSlider.style.display = "none";
-        displayTime.style.display = "none";
+        displayTime.style.visibility = "none";
         displayStops.style.display = "none";
     } else {
         runningClock.style.display = "none";
+        stopList.style.display = "none";
         timeSlider.style.display = "block";
         stopSlider.style.display = "block";
         displayTime.style.display = "block";
@@ -141,9 +150,21 @@ function startFishing() {
     stopSlider.style.display = "none";
     displayTime.style.display = "none";
     displayStops.style.display = "none";
+    stopList.style.display = "none";
     paused = false;
     toggleRaceOn = true;
+    clearElementsChilds(stopList);
+    makeList(stopEvents);
     runClock(timer)
+}
+
+function toggleShowList() {
+    if (stopList.style.display == "block") {
+        stopList.style.display = "none";
+    } else {
+        stopList.style.display = "block"
+    }
+        
 }
 
 // Pause button functionality. Pauses timer and displays status text accordingly. Toggling will restart timer.
@@ -165,6 +186,7 @@ function pauseFishing() {
 // Reset button functionality. Reset values and displays sliders again to make new timer.
 function resetFishing() {
     clearTimeout(storeTimer);
+    clearElementsChilds(stopList);
     paused = true;
     toggleRaceOn = false;
     startConditions();
@@ -189,12 +211,16 @@ function setupClock(inputMinutes) {
 
 // Check if timed event needs to be played. Change bonusfish and play sound.
 function checkEventTimer(stops, timer) {
+    let previousFish;
     for(let i=0; i < stops.length; i++) {
         if (stops[i].hours == timer.hours && stops[i].minutes == timer.minutes && stops[i].seconds == timer.seconds) {
-            
-            bonusFish = fishes.sample();
+            previousFish = bonusFish;
+            do {
+                bonusFish = fishes.sample();
+            } while (bonusFish == previousFish);
+
             statusText.innerHTML = `Bonuskala ${bonusFish}`;
-            window.navigator.vibrate(500);
+            window.navigator.vibrate(1000);
             bells.play();
 
         }
@@ -218,12 +244,26 @@ function runClock(timer) {
             }
 
             if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 1) {
-                console.log("TIME OUT!");
+                statusText.innerHTML = "Kisa loppu!";
             }
 
             checkEventTimer(stopEvents, timer);
             renderElements();
             runClock(timer);
         }, 1000)
+    }
+}
+
+function makeList(timeArray) {
+    let stringTime = {};
+    let div = document.createElement('div');
+    div.innerHTML = `Bonuskalan vaihto:`;
+    stopList.appendChild(div);
+    for (let i= timeArray.length - 1; i >= 0; i--) {
+        stringTime = timeInString(timeArray[i]);
+        let li = document.createElement('li');
+        li.setAttribute('class', 'listItems');
+        li.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
+        stopList.appendChild(li);
     }
 }
