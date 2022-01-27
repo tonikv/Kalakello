@@ -18,7 +18,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500&family=Roboto:ital,wght@0,300;0,500;0,700;1,300&display=swap"
         rel="stylesheet">
-    <link rel="shortcut icon" href="/fish_icon.svg"/>
+    <link rel="shortcut icon" href="/fish_icon.svg" />
     <link rel="stylesheet" href="index.css">
 </head>
 
@@ -26,22 +26,22 @@
     <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-    <h1 class="header">KALAKELLO</h1>
-    <div id="status" class="statusbar"></div>
     <div class="flex-container">
+        <h1 class="header">KALAKELLO</h1>
+        <div id="status" class="statusbar"></div>
         <!--Input fields for adjusting time and stops-->
-        <div class="timer-slider-container">
-            <input type="range" min="30" max="480" value="150" step="30" class="slider" id="time">
+        <div class="time-slider">
+            <input type="range" min="30" max="600" value="150" step="30" class="slider" id="time">
         </div>
-        <div class="adjust-stops-container">
+        <div class="stops-slider">
             <input type="range" min="1" max="20" value="4" class="slider" id="stops">
         </div>
 
-        <div id="time-left" class="time-left">Hyvää kalaonnea!</div>
+        <div id="time-left" class="time-left"></div>
 
         <!--Display timer and stops-->
-            <div id="clock-display" class="big-font"></div>
-            <div id="stops-display" class="big-font"></div>
+        <div id="clock-display" class="big-font"></div>
+        <div id="stops-display" class="big-font"></div>
 
         <!--Start, pause and reset buttons-->
         <div class="buttons-container">
