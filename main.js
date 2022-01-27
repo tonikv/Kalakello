@@ -9,8 +9,8 @@
     Stop event will play sound and display new bonus fish
 */
 
-Array.prototype.sample = function() {
-    return this[Math.floor(Math.random()*this.length)];
+Array.prototype.sample = function () {
+    return this[Math.floor(Math.random() * this.length)];
 }
 
 // Get reference to elements
@@ -20,7 +20,6 @@ const displayTime = document.querySelector("#clock-display");
 const stopList = document.querySelector("#stops-list");
 const displayStops = document.querySelector("#stops-display");
 const playButton = document.querySelector("#play");
-const pauseButton = document.querySelector("#pause");
 const resetButton = document.querySelector("#reset");
 const showButton = document.querySelector("#show");
 const runningClock = document.querySelector("#time-left");
@@ -28,7 +27,6 @@ const statusText = document.querySelector("#status");
 
 // Event listeners
 playButton.addEventListener("click", startFishing);
-pauseButton.addEventListener("click", pauseFishing);
 resetButton.addEventListener("click", resetFishing);
 showButton.addEventListener("click", toggleShowList);
 
@@ -48,7 +46,7 @@ stopSlider.oninput = function () {
 const bells = new Audio(`mixkit-school-calling-bell-580.wav`);
 const fishes = ["Hauki", "Ahven", "Taimen", "Kuha"];
 let bonusFish = fishes.sample();
-let stopsAmount, toggleRaceOn, timer, paused, storeTimer, stringTime
+let stopsAmount, toggleRaceOn, timer, storeTimer, stringTime
 let stopEvents = [];
 
 // Initial state for program.
@@ -60,19 +58,19 @@ function randomTimes(minutes, stops) {
     let randomNumber;
     let min = partsSize / 2;
     let totalTime = 0;
-    for(let i=0; i < stops; i++) {
+    for (let i = 0; i < stops; i++) {
         randomNumber = Math.floor(Math.random() * min) + min;
         totalTime += Math.round(randomNumber);
         stopEvents.push(totalTime);
     }
 
-    for(let i=0; i < stopEvents.length; i++) {
+    for (let i = 0; i < stopEvents.length; i++) {
         stopEvents[i] = setupClock(stopEvents[i]);
     }
 }
 
 function clearElementsChilds(element) {
-    while(element.firstChild) {
+    while (element.firstChild) {
         element.removeChild(element.firstChild);
     }
 }
@@ -80,7 +78,6 @@ function clearElementsChilds(element) {
 // Gives start values
 function startConditions() {
     stopEvents = [];
-    paused = true;
     toggleRaceOn = false;
     timeSlider.value = 120;
     stopSlider.value = 4;
@@ -141,7 +138,7 @@ function startFishing() {
     if (stopEvents.length == 0) {
         randomTimes(timeSlider.value, stopSlider.value);
     }
-    if(toggleRaceOn) {
+    if (toggleRaceOn) {
         return;
     }
     statusText.innerHTML = `Bonuskala ${bonusFish}`;
@@ -151,7 +148,6 @@ function startFishing() {
     displayTime.style.display = "none";
     displayStops.style.display = "none";
     stopList.style.display = "none";
-    paused = false;
     toggleRaceOn = true;
     clearElementsChilds(stopList);
     makeList(stopEvents);
@@ -164,30 +160,12 @@ function toggleShowList() {
     } else {
         stopList.style.display = "block"
     }
-        
-}
-
-// Pause button functionality. Pauses timer and displays status text accordingly. Toggling will restart timer.
-function pauseFishing() {
-    bells.pause();
-    if (!toggleRaceOn && !paused) {
-        return;
-    }
-    toggleRaceOn = false;
-    statusText.innerHTML = "Kisa pysäytetty";
-
-    clearTimeout(storeTimer);
-    paused = !paused
-    if (!paused) {
-        startFishing();
-    }
 }
 
 // Reset button functionality. Reset values and displays sliders again to make new timer.
 function resetFishing() {
     clearTimeout(storeTimer);
     clearElementsChilds(stopList);
-    paused = true;
     toggleRaceOn = false;
     startConditions();
     renderElements();
@@ -205,14 +183,13 @@ function setupClock(inputMinutes) {
         "minutes": minutes,
         "seconds": seconds
     }
-
     return timer
 }
 
 // Check if timed event needs to be played. Change bonusfish and play sound.
 function checkEventTimer(stops, timer) {
     let previousFish;
-    for(let i=0; i < stops.length; i++) {
+    for (let i = 0; i < stops.length; i++) {
         if (stops[i].hours == timer.hours && stops[i].minutes == timer.minutes && stops[i].seconds == timer.seconds) {
             previousFish = bonusFish;
             do {
@@ -229,29 +206,27 @@ function checkEventTimer(stops, timer) {
 
 // Run clock down until time is out. 
 function runClock(timer) {
-    if (!paused) {
-        storeTimer = setTimeout(function () {
-            if (timer.seconds - 1 === -1) {
-                timer.seconds = 59;
-                timer.minutes = timer.minutes - 1;
-            } else {
-                timer.seconds = timer.seconds - 1;
-            }
+    storeTimer = setTimeout(function () {
+        if (timer.seconds - 1 === -1) {
+            timer.seconds = 59;
+            timer.minutes = timer.minutes - 1;
+        } else {
+            timer.seconds = timer.seconds - 1;
+        }
 
-            if (timer.minutes == -1) {
-                timer.minutes = 59;
-                timer.hours = timer.hours - 1;
-            }
+        if (timer.minutes == -1) {
+            timer.minutes = 59;
+            timer.hours = timer.hours - 1;
+        }
 
-            if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 1) {
-                statusText.innerHTML = "Kisa loppu!";
-            }
+        if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 1) {
+            statusText.innerHTML = "Kisa loppu!";
+        }
 
-            checkEventTimer(stopEvents, timer);
-            renderElements();
-            runClock(timer);
-        }, 1000)
-    }
+        checkEventTimer(stopEvents, timer);
+        renderElements();
+        runClock(timer);
+    }, 1000)
 }
 
 function makeList(timeArray) {
@@ -259,7 +234,7 @@ function makeList(timeArray) {
     let div = document.createElement('div');
     div.innerHTML = `Bonuskalan vaihto:`;
     stopList.appendChild(div);
-    for (let i= timeArray.length - 1; i >= 0; i--) {
+    for (let i = timeArray.length - 1; i >= 0; i--) {
         stringTime = timeInString(timeArray[i]);
         let li = document.createElement('li');
         li.setAttribute('class', 'listItems');
