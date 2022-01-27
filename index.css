@@ -18,12 +18,12 @@ body {
     align-items: center;
 }
 
-.timer-slider-container {
+.time-slider {
     width: 80%;
     padding: 0 0 1rem 0;
 }
 
-.adjust-stops-container {
+.stops-slider {
     width: 80%;
     padding: 0 0 0.5rem 0;
 }
@@ -44,6 +44,7 @@ body {
 }
 
 .statusbar {
+    padding-top: 0;
     padding-bottom: 5px;
     font-size: 20px;
     text-align: center;
