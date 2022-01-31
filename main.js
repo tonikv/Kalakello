@@ -24,11 +24,21 @@ const resetButton = document.querySelector("#reset");
 const showButton = document.querySelector("#show");
 const runningClock = document.querySelector("#time-left");
 const statusText = document.querySelector("#status");
+const worker = new Worker('clock.js');
 
 // Event listeners
 playButton.addEventListener("click", startFishing);
 resetButton.addEventListener("click", resetFishing);
 showButton.addEventListener("click", toggleShowList);
+
+worker.onmessage = function (e) {
+    if (e.data.message === "UPDATE") {
+        timer = e.data.time;
+        checkEventTimer(stopEvents, timer);
+        stringTime = timeInString(timer);
+        runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
+    }
+}
 
 timeSlider.oninput = function () {
     timer = setupClock(this.value);
@@ -46,7 +56,7 @@ stopSlider.oninput = function () {
 const bells = new Audio(`mixkit-school-calling-bell-580.wav`);
 const fishes = ["Hauki", "Ahven", "Taimen", "Kuha"];
 let bonusFish = fishes.sample();
-let stopsAmount, toggleRaceOn, timer, storeTimer, stringTime
+let stopsAmount, toggleRaceOn, timer, stringTime
 let stopEvents = [];
 
 // Initial state for program.
@@ -69,12 +79,6 @@ function randomTimes(minutes, stops) {
     }
 }
 
-function clearElementsChilds(element) {
-    while (element.firstChild) {
-        element.removeChild(element.firstChild);
-    }
-}
-
 // Gives start values
 function startConditions() {
     stopEvents = [];
@@ -82,6 +86,11 @@ function startConditions() {
     timeSlider.value = 120;
     stopSlider.value = 4;
     timer = setupClock(timeSlider.value);
+    let data = {
+        "time": timer,
+        "message": "INIT"
+    }
+    worker.postMessage(data);
     stringTime = timeInString(timer);
     stopsAmount = stopSlider.value;
     statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
@@ -110,29 +119,6 @@ function renderElements() {
     }
 }
 
-// Takes integer values and convert time to string format for display purposis.
-function timeInString(timer) {
-    let stringMinutes, stringSeconds
-    if (timer.minutes < 10) {
-        stringMinutes = `0${timer.minutes}`;
-    } else {
-        stringMinutes = timer.minutes.toString();
-    }
-    if (timer.seconds < 10) {
-        stringSeconds = `0${timer.seconds}`;
-    } else {
-        stringSeconds = timer.seconds.toString();
-    }
-
-    stringTime = {
-        "hours": timer.hours.toString(),
-        "minutes": stringMinutes,
-        "seconds": stringSeconds
-    }
-
-    return stringTime;
-}
-
 // Play button functionality. Hides elements that aren't needed when timer is on and starts timer. Prevents starting again if timer is allready running.
 function startFishing() {
     if (stopEvents.length == 0) {
@@ -151,23 +137,20 @@ function startFishing() {
     toggleRaceOn = true;
     clearElementsChilds(stopList);
     makeList(stopEvents);
-    runClock(timer)
-}
 
-function toggleShowList() {
-    if (stopList.style.display == "block") {
-        stopList.style.display = "none";
-    } else {
-        stopList.style.display = "block"
+    let data = {
+        "message": "START",
+        "time": setupClock(timeSlider.value),
     }
+    worker.postMessage(data);
 }
 
 // Reset button functionality. Reset values and displays sliders again to make new timer.
 function resetFishing() {
-    clearTimeout(storeTimer);
     clearElementsChilds(stopList);
     toggleRaceOn = false;
     startConditions();
+    worker.postMessage({ "message": "RESET" });
     renderElements();
     statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
 }
@@ -177,13 +160,33 @@ function setupClock(inputMinutes) {
     let hours = Math.floor(inputMinutes / 60);
     let minutes = inputMinutes % 60;
     let seconds = 0;
-
     let timer = {
         "hours": hours,
         "minutes": minutes,
         "seconds": seconds
     }
     return timer
+}
+
+// Takes integer values and convert time to string format for display purposis.
+function timeInString(timer) {
+    let stringMinutes, stringSeconds
+    if (timer.minutes < 10) {
+        stringMinutes = `0${timer.minutes}`;
+    } else {
+        stringMinutes = timer.minutes.toString();
+    }
+    if (timer.seconds < 10) {
+        stringSeconds = `0${timer.seconds}`;
+    } else {
+        stringSeconds = timer.seconds.toString();
+    }
+    stringTime = {
+        "hours": timer.hours.toString(),
+        "minutes": stringMinutes,
+        "seconds": stringSeconds
+    }
+    return stringTime;
 }
 
 // Check if timed event needs to be played. Change bonusfish and play sound.
@@ -195,38 +198,12 @@ function checkEventTimer(stops, timer) {
             do {
                 bonusFish = fishes.sample();
             } while (bonusFish == previousFish);
-
+            console.log("TIMED EVENT");
             statusText.innerHTML = `Bonuskala ${bonusFish}`;
             window.navigator.vibrate(1000);
             bells.play();
-
         }
     }
-}
-
-// Run clock down until time is out. 
-function runClock(timer) {
-    storeTimer = setTimeout(function () {
-        if (timer.seconds - 1 === -1) {
-            timer.seconds = 59;
-            timer.minutes = timer.minutes - 1;
-        } else {
-            timer.seconds = timer.seconds - 1;
-        }
-
-        if (timer.minutes == -1) {
-            timer.minutes = 59;
-            timer.hours = timer.hours - 1;
-        }
-
-        if (timer.hours == 0 && timer.minutes == 0 && timer.seconds == 1) {
-            statusText.innerHTML = "Kisa loppu!";
-        }
-
-        checkEventTimer(stopEvents, timer);
-        renderElements();
-        runClock(timer);
-    }, 1000)
 }
 
 function makeList(timeArray) {
@@ -240,5 +217,19 @@ function makeList(timeArray) {
         li.setAttribute('class', 'listItems');
         li.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
         stopList.appendChild(li);
+    }
+}
+
+function toggleShowList() {
+    if (stopList.style.display == "block") {
+        stopList.style.display = "none";
+    } else {
+        stopList.style.display = "block"
+    }
+}
+
+function clearElementsChilds(element) {
+    while (element.firstChild) {
+        element.removeChild(element.firstChild);
     }
 }
