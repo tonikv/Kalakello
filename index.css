@@ -15,6 +15,10 @@ body {
     font-size: 20px;
 }
 
+.button-box {
+    border-radius: 50%;
+}
+
 .flex-container {
     position: relative;
     margin-top: 80px;
@@ -39,12 +43,12 @@ body {
 
 
 .time-slider {
-    width: 40%;
+    width: 200px;
     padding: 0 0 1rem 0;
 }
 
 .stops-slider {
-    width: 40%;
+    width: 200px;
     padding: 0 0 0.5rem 0;
 }
 
@@ -57,8 +61,8 @@ body {
 .time-left {
     display: none;
     text-align: center;
-    font-size: 84px;
-    margin-bottom: 33px;
+    font-size: 100px;
+    margin-bottom: 38px;
     color: white;
     text-shadow: 5px 5px black;
 }

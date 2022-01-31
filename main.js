@@ -55,7 +55,7 @@ stopSlider.oninput = function () {
 // Variables
 const bells = new Audio(`mixkit-school-calling-bell-580.wav`);
 const fishes = ["Hauki", "Ahven", "Taimen", "Kuha"];
-let bonusFish = fishes.sample();
+let bonusFish;
 let stopsAmount, toggleRaceOn, timer, stringTime
 let stopEvents = [];
 
@@ -127,7 +127,11 @@ function startFishing() {
     if (toggleRaceOn) {
         return;
     }
-    statusText.innerHTML = `Bonuskala ${bonusFish}`;
+    if (bonusFish != undefined) {
+        statusText.innerHTML = `Bonuskala ${bonusFish}`;
+    } else {
+        statusText.innerHTML = ``;
+    }
     runningClock.style.display = "block";
     timeSlider.style.display = "none";
     stopSlider.style.display = "none";
@@ -148,6 +152,7 @@ function startFishing() {
 // Reset button functionality. Reset values and displays sliders again to make new timer.
 function resetFishing() {
     clearElementsChilds(stopList);
+    bonusFish = undefined;
     toggleRaceOn = false;
     startConditions();
     worker.postMessage({ "message": "RESET" });
