@@ -93,7 +93,7 @@ function startConditions() {
     worker.postMessage(data);
     stringTime = timeInString(timer);
     stopsAmount = stopSlider.value;
-    statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
+    statusText.innerHTML = "Kesto ja BONUS kalan vaihtomäärä";
     displayStops.innerHTML = `${stopsAmount}`;
     displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
     runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
@@ -152,7 +152,7 @@ function resetFishing() {
     startConditions();
     worker.postMessage({ "message": "RESET" });
     renderElements();
-    statusText.innerHTML = "Määritä kisan kesto ja BONUS kalan vaihtomäärä";
+    statusText.innerHTML = "Kesto ja BONUS kalan vaihtomäärä";
 }
 
 // Takes minutes in and converts it to hour, minutes and seconds
