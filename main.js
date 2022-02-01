@@ -36,20 +36,20 @@ worker.onmessage = function (e) {
         timer = e.data.time;
         checkEventTimer(stopEvents, timer);
         stringTime = timeInString(timer);
-        runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
+        runningClock.textContent = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
     }
 }
 
 timeSlider.oninput = function () {
     timer = setupClock(this.value);
     stringTime = timeInString(timer);
-    displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
-    runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
+    displayTime.textContent = `${stringTime.hours}:${stringTime.minutes}`;
+    runningClock.textContent = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
 }
 
 stopSlider.oninput = function () {
     stopsAmount = this.value;
-    displayStops.innerHTML = this.value;
+    displayStops.textContent = this.value;
 }
 
 // Variables
@@ -93,10 +93,10 @@ function startConditions() {
     worker.postMessage(data);
     stringTime = timeInString(timer);
     stopsAmount = stopSlider.value;
-    statusText.innerHTML = "Kesto ja BONUS kalan vaihtomäärä";
-    displayStops.innerHTML = `${stopsAmount}`;
-    displayTime.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
-    runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
+    statusText.textContent = "Kesto ja BONUS kalan vaihtomäärä";
+    displayStops.textContent = `${stopsAmount}`;
+    displayTime.textContent = `${stringTime.hours}:${stringTime.minutes}`;
+    runningClock.textContent = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
 }
 
 // Renders elements depending on if timer is on or off.
@@ -104,7 +104,7 @@ function renderElements() {
     stringTime = timeInString(timer);
     if (toggleRaceOn) {
         runningClock.style.display = "block";
-        runningClock.innerHTML = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
+        runningClock.textContent = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
         timeSlider.style.display = "none";
         stopSlider.style.display = "none";
         displayTime.style.visibility = "none";
@@ -128,9 +128,9 @@ function startFishing() {
         return;
     }
     if (bonusFish != undefined) {
-        statusText.innerHTML = `Bonuskala ${bonusFish}`;
+        statusText.textContent = `Bonuskala ${bonusFish}`;
     } else {
-        statusText.innerHTML = ``;
+        statusText.textContent = ``;
     }
     runningClock.style.display = "block";
     timeSlider.style.display = "none";
@@ -157,7 +157,7 @@ function resetFishing() {
     startConditions();
     worker.postMessage({ "message": "RESET" });
     renderElements();
-    statusText.innerHTML = "Kesto ja BONUS kalan vaihtomäärä";
+    statusText.textContent = "Kesto ja BONUS kalan vaihtomäärä";
 }
 
 // Takes minutes in and converts it to hour, minutes and seconds
@@ -204,7 +204,7 @@ function checkEventTimer(stops, timer) {
                 bonusFish = fishes.sample();
             } while (bonusFish == previousFish);
             console.log("TIMED EVENT");
-            statusText.innerHTML = `Bonuskala ${bonusFish}`;
+            statusText.textContent = `Bonuskala ${bonusFish}`;
             window.navigator.vibrate(1000);
             bells.play();
         }
@@ -214,13 +214,13 @@ function checkEventTimer(stops, timer) {
 function makeList(timeArray) {
     let stringTime = {};
     let div = document.createElement('div');
-    div.innerHTML = `Bonuskalan vaihto:`;
+    div.textContent = `Bonuskalan vaihto:`;
     stopList.appendChild(div);
     for (let i = timeArray.length - 1; i >= 0; i--) {
         stringTime = timeInString(timeArray[i]);
         let li = document.createElement('li');
         li.setAttribute('class', 'listItems');
-        li.innerHTML = `${stringTime.hours}:${stringTime.minutes}`;
+        li.textContent = `${stringTime.hours}:${stringTime.minutes}`;
         stopList.appendChild(li);
     }
 }
