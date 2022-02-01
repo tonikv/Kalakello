@@ -4,7 +4,7 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <![endif]-->
 
-<html>
+<html lang="fi">
 
 <head>
     <meta charset="utf-8">
@@ -32,10 +32,10 @@
         <div id="status" class="statusbar"></div>
         <!--Input fields for adjusting time and stops-->
         <div class="time-slider">
-            <input type="range" min="30" max="600" value="150" step="30" class="slider" id="time">
+            <input type="range" min="30" aria-valuemin="30" max="600" aria-valuemax="600" value="150" aria-valuenow="150" step="30" class="slider" id="time" aria-label="Time slider">
         </div>
         <div class="stops-slider">
-            <input type="range" min="1" max="30" value="4" class="slider" id="stops">
+            <input type="range" min="1" aria-valuemin="1" max="30" aria-valuemax="30" value="4" aria-valuenow="4" class="slider" id="stops" aria-label="Stops slider">
         </div>
 
         <div id="time-left" class="time-left"></div>
@@ -46,13 +46,13 @@
 
         <!--Start, pause and reset buttons-->
         <div class="buttons-container">
-            <button id="play" class="button-box">
+            <button id="play" class="button-box" type="button" aria-label="Start clock">
                 <i class="bi-play" style="font-size: 2rem; color: cornflowerblue;"></i>
             </button>
-            <button id="reset" class="button-box">
+            <button id="reset" class="button-box" type="button" aria-label="Reset clock">
                 <i class="bi-arrow-repeat" style="font-size: 2rem; color: cornflowerblue;"></i>
             </button>
-            <button id="show" class="button-box">
+            <button id="show" class="button-box" type="button" aria-label="Show data">
                 <i class="bi bi-question-lg" style="font-size: 2rem; color: cornflowerblue;"></i>
             </button>
         </div>
