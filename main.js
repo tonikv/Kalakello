@@ -41,7 +41,7 @@ worker.onmessage = function (e) {
 }
 
 timeSlider.oninput = function () {
-    timer = setupClock(this.value);
+    timer = minutesToHourMinSec(this.value);
     stringTime = timeInString(timer);
     displayTime.textContent = `${stringTime.hours}:${stringTime.minutes}`;
     runningClock.textContent = `${stringTime.hours}:${stringTime.minutes}:${stringTime.seconds}`;
@@ -75,7 +75,7 @@ function randomTimes(minutes, stops) {
     }
 
     for (let i = 0; i < stopEvents.length; i++) {
-        stopEvents[i] = setupClock(stopEvents[i]);
+        stopEvents[i] = minutesToHourMinSec(stopEvents[i]);
     }
 }
 
@@ -85,7 +85,7 @@ function startConditions() {
     toggleRaceOn = false;
     timeSlider.value = 120;
     stopSlider.value = 4;
-    timer = setupClock(timeSlider.value);
+    timer = minutesToHourMinSec(timeSlider.value);
     let data = {
         "time": timer,
         "message": "INIT"
@@ -144,7 +144,7 @@ function startFishing() {
 
     let data = {
         "message": "START",
-        "time": setupClock(timeSlider.value),
+        "time": minutesToHourMinSec(timeSlider.value),
     }
     worker.postMessage(data);
 }
@@ -161,7 +161,7 @@ function resetFishing() {
 }
 
 // Takes minutes in and converts it to hour, minutes and seconds
-function setupClock(inputMinutes) {
+function minutesToHourMinSec(inputMinutes) {
     let hours = Math.floor(inputMinutes / 60);
     let minutes = inputMinutes % 60;
     let seconds = 0;
