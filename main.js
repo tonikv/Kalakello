@@ -64,15 +64,17 @@ startConditions();
 
 // Create random times between given minutes and stops amount. 
 function randomTimes(minutes, stops) {
-    let partsSize = Math.round(minutes / stops);
-    let randomNumber;
-    let min = partsSize / 2;
-    let totalTime = 0;
+    //let partsSize = Math.round(minutes / stops);
+    //let randomNumber;
+    //let min = partsSize / 2;
+    //let totalTime = 0;
     for (let i = 0; i < stops; i++) {
-        randomNumber = Math.floor(Math.random() * min) + min;
-        totalTime += Math.round(randomNumber);
-        stopEvents.push(totalTime);
+        const randomNumber = Math.floor(Math.random() * (minutes - 1 + 1) + 1);
+        //totalTime += Math.round(randomNumber);
+        stopEvents.push(randomNumber);
     }
+
+    stopEvents.sort((a, b) => a - b);
 
     for (let i = 0; i < stopEvents.length; i++) {
         stopEvents[i] = minutesToHourMinSec(stopEvents[i]);
@@ -126,8 +128,8 @@ function startFishing() {
     }
     if (toggleRaceOn) {
         return;
-    }
-    if (bonusFish != undefined) {
+    } 
+    if (bonusFish !== undefined) {
         statusText.textContent = `Bonuskala ${bonusFish}`;
     } else {
         statusText.textContent = ``;
@@ -202,7 +204,7 @@ function checkEventTimer(stops, timer) {
             previousFish = bonusFish;
             do {
                 bonusFish = fishes.sample();
-            } while (bonusFish == previousFish);
+            } while (bonusFish === previousFish);
             console.log("TIMED EVENT");
             statusText.textContent = `Bonuskala ${bonusFish}`;
             window.navigator.vibrate(1000);
